@@ -7,44 +7,44 @@ const getDatasEmployee = (employee) => {
     if (employeeCurr.firstName === employee
       || employeeCurr.lastName === employee
       || employeeCurr.id === employee) {
-        objDatas = objCreator(objDatas, employeeCurr);
-      // objDatas.id = employeeCurr.id;
-      // objDatas.fullName = `${employeeCurr.firstName} ${employeeCurr.lastName}`;
-      // objDatas.species = employeeCurr.responsibleFor;
-      // objDatas.locations = [];
+      objDatas = objCreator(objDatas, employeeCurr);
     }
   })
+
   return objDatas;
 };
 
-//Cria objeto do colaborador
+// Cria objeto do colaborador
 const objCreator = (obj, employeeCurr) => {
-  // let objDatas = {};
   obj.id = employeeCurr.id;
   obj.fullName = `${employeeCurr.firstName} ${employeeCurr.lastName}`;
   obj.species = employeeCurr.responsibleFor;
+
   return obj;
+};
+
+// Troca id por name e cria location
+const changeIdAndAddLocation = (obj) => {
+  const arraySpecies = [];
+  const arrayLocation = [];
+  obj.species.forEach((idSpecie) => {
+    arraySpecies.push(getDataSpecie(idSpecie, 'name'));
+    arrayLocation.push(getDataSpecie(idSpecie, 'location'));
+  });
+
+  return [arraySpecies, arrayLocation];
 };
 
 // Retorna uma propriedade da espécie.
 const getDataSpecie = (idSpecie, property) => data.species
   .find((specie) => specie.id === idSpecie)[property];
-// const getDataSpecie = (ids) => {
-//   ids.map((id) => data.species.find((animal) => animal.id === id).name);
-// }
 
 function getEmployeesCoverage(objEmployee) {
   if (objEmployee !== undefined) {
-    const arraySpecies = [];
-    const arrayLocation = [];
     const reference = objEmployee.name ? objEmployee.name : objEmployee.id;
     const datasEmployee = getDatasEmployee(reference);
-    datasEmployee.species.forEach((idSpecie) => {
-      // datasEmployee.species[index] = getDataSpecie(idSpecie, 'name');
-      arraySpecies.push(getDataSpecie(idSpecie, 'name'));
-      arrayLocation.push(getDataSpecie(idSpecie, 'location'));
-      // datasEmployee.locations[index] = getDataSpecie(idSpecie, 'location');
-    });
+    const arraySpecies = changeIdAndAddLocation(datasEmployee)[0];
+    const arrayLocation = changeIdAndAddLocation(datasEmployee)[1];
     datasEmployee.species = arraySpecies;
     datasEmployee.locations = arrayLocation;
 
@@ -52,28 +52,18 @@ function getEmployeesCoverage(objEmployee) {
   }
   const totalList = [];
   data.employees.forEach((employee) => {
-    const arraySpecies = [];
-    const arrayLocation = [];
     let objDatas = {};
     objDatas = objCreator(objDatas, employee);
-    // objDatas.id = employee.id;
-    // objDatas.fullName = `${employee.firstName} ${employee.lastName}`;
-    // objDatas.species = employee.responsibleFor;
-    // objDatas.locations = [];
-    objDatas.species.forEach((idSpecie) => {
-      // objDatas.species[index] = getDataSpecie(idSpecie, 'name');
-      arraySpecies.push(getDataSpecie(idSpecie, 'name'));
-      arrayLocation.push(getDataSpecie(idSpecie, 'location'));
-      // objDatas.locations[index] = getDataSpecie(idSpecie, 'location');
-    });
+    const arraySpecies = changeIdAndAddLocation(objDatas)[0];
+    const arrayLocation = changeIdAndAddLocation(objDatas)[1];
     objDatas.species = arraySpecies;
     objDatas.locations = arrayLocation;
     totalList.push(objDatas);
-
   });
+
   return totalList;
 }
 
-console.log(getEmployeesCoverage());
+// console.log(getEmployeesCoverage());
 
 module.exports = getEmployeesCoverage;
