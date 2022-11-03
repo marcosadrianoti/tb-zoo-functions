@@ -1,5 +1,4 @@
 const data = require('../data/zoo_data');
-const { employees } = data;
 
 // Retorna um objeto com o id, nome completo e os ids das especies de responsabilidade do colaborador.
 const getDatasEmployee = (employee) => {
@@ -8,13 +7,23 @@ const getDatasEmployee = (employee) => {
     if (employeeCurr.firstName === employee
       || employeeCurr.lastName === employee
       || employeeCurr.id === employee) {
-      objDatas.id = employeeCurr.id;
-      objDatas.fullName = `${employeeCurr.firstName} ${employeeCurr.lastName}`;
-      objDatas.species = employeeCurr.responsibleFor;
-      objDatas.locations = [];
+        objDatas = objCreator(objDatas, employeeCurr);
+      // objDatas.id = employeeCurr.id;
+      // objDatas.fullName = `${employeeCurr.firstName} ${employeeCurr.lastName}`;
+      // objDatas.species = employeeCurr.responsibleFor;
+      // objDatas.locations = [];
     }
   })
   return objDatas;
+};
+
+//Cria objeto do colaborador
+const objCreator = (obj, employeeCurr) => {
+  // let objDatas = {};
+  obj.id = employeeCurr.id;
+  obj.fullName = `${employeeCurr.firstName} ${employeeCurr.lastName}`;
+  obj.species = employeeCurr.responsibleFor;
+  return obj;
 };
 
 // Retorna uma propriedade da espécie.
@@ -26,11 +35,11 @@ const getDataSpecie = (idSpecie, property) => data.species
 
 function getEmployeesCoverage(objEmployee) {
   if (objEmployee !== undefined) {
-    const reference = objEmployee.name ? objEmployee.name : objEmployee.id;
-    const datasEmployee = getDatasEmployee(reference);
     const arraySpecies = [];
     const arrayLocation = [];
-    datasEmployee.species.forEach((idSpecie, index) => {
+    const reference = objEmployee.name ? objEmployee.name : objEmployee.id;
+    const datasEmployee = getDatasEmployee(reference);
+    datasEmployee.species.forEach((idSpecie) => {
       // datasEmployee.species[index] = getDataSpecie(idSpecie, 'name');
       arraySpecies.push(getDataSpecie(idSpecie, 'name'));
       arrayLocation.push(getDataSpecie(idSpecie, 'location'));
@@ -43,11 +52,22 @@ function getEmployeesCoverage(objEmployee) {
   }
   const totalList = [];
   data.employees.forEach((employee) => {
-    const objDatas = {};
-    objDatas.id = employee.id;
-    objDatas.fullName = `${employee.firstName} ${employee.lastName}`;
-    objDatas.species = employee.responsibleFor;
-    objDatas.locations = [];
+    const arraySpecies = [];
+    const arrayLocation = [];
+    let objDatas = {};
+    objDatas = objCreator(objDatas, employee);
+    // objDatas.id = employee.id;
+    // objDatas.fullName = `${employee.firstName} ${employee.lastName}`;
+    // objDatas.species = employee.responsibleFor;
+    // objDatas.locations = [];
+    objDatas.species.forEach((idSpecie) => {
+      // objDatas.species[index] = getDataSpecie(idSpecie, 'name');
+      arraySpecies.push(getDataSpecie(idSpecie, 'name'));
+      arrayLocation.push(getDataSpecie(idSpecie, 'location'));
+      // objDatas.locations[index] = getDataSpecie(idSpecie, 'location');
+    });
+    objDatas.species = arraySpecies;
+    objDatas.locations = arrayLocation;
     totalList.push(objDatas);
 
   });
