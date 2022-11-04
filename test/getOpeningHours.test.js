@@ -23,8 +23,17 @@ describe('Testes da função getOpeningHours', () => {
     expect(typeof getOpeningHours('Tuesday', '09:00-AM')).toStrictEqual('string');
     expect(getOpeningHours('Tuesday', '09:00-AM')).toStrictEqual('The zoo is open');
   });
-  test('Para os argumentos Wednesday e 09:00-PM deve retornar a string "The zoo is closed".', () => {
+  test('Para os argumentos Wednesday e 06:00-PM deve retornar a string "The zoo is closed".', () => {
     expect(typeof getOpeningHours('Wednesday', '09:00-AM')).toStrictEqual('string');
     expect(getOpeningHours('Wednesday', '06:00-AM')).toStrictEqual('The zoo is closed');
+  });
+  test('Para os argumentos Thu e 09:00-AM deve lançar uma exceção com a mensagem: "The day must be valid. Example: Monday"', () => {
+    expect(() => {getOpeningHours('Thru', '09:00-AM')}).toThrow('The day must be valid. Example: Monday');
+  });
+  test('Para os argumentos Friday e 09:00-ZM deve lançar uma exceção com a mensagem: "The abbreviation must be \'AM\' or \'PM\'"', () => {
+    expect(() => {getOpeningHours('Friday', '09:00-ZM')}).toThrow('The abbreviation must be \'AM\' or \'PM\'');
+  });
+  test('Para os argumentos Saturday e C9:00-AM deve lançar uma exceção com a mensagem: "The hour should represent a number"', () => {
+    expect(() => {getOpeningHours('Saturday', 'C9:00-AM')}).toThrow('The hour should represent a number');
   });
 });
