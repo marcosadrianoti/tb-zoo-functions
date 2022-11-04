@@ -28,5 +28,3 @@ describe('Testes da função getOpeningHours', () => {
     expect(getOpeningHours('Wednesday', '06:00-AM')).toStrictEqual('The zoo is closed');
   });
 });
-
-  
